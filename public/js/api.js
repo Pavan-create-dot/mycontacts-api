@@ -1,5 +1,19 @@
 // API Configuration
-const API_BASE_URL = 'http://localhost:5001/api';
+// - When running locally from Express (http://localhost:5000) → use that origin
+// - When deployed on Render (mycontacts-api-7y8k.onrender.com) → use the Render origin
+// - If the HTML is opened directly from the filesystem (file://) → also target the Render API
+let API_BASE_URL;
+
+if (window.location.origin === 'null' || window.location.origin.startsWith('file://')) {
+    // Opened directly from the file system – point to deployed API
+    API_BASE_URL = 'https://mycontacts-api-7y8k.onrender.com/api';
+} else if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    // Local development – assume backend is running on the same origin
+    API_BASE_URL = `${window.location.origin}/api`;
+} else {
+    // Deployed environment – use current origin (works on Render)
+    API_BASE_URL = `${window.location.origin}/api`;
+}
 
 // Get token from localStorage
 function getToken() {
